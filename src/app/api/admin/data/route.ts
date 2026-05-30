@@ -3,7 +3,7 @@ import { readSiteData, writeSiteData } from "@/lib/db";
 import { fetchProducts, fetchContents } from "@/lib/sheets";
 
 export async function GET() {
-  const data = readSiteData();
+  const data = await readSiteData();
   
   // If override is disabled, pre-populate with Google Sheets data
   if (!data.overrideProducts) {
@@ -22,6 +22,6 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const body = await request.json();
-  writeSiteData(body);
+  await writeSiteData(body);
   return NextResponse.json({ success: true });
 }

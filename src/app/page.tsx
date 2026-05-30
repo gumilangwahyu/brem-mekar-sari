@@ -16,10 +16,10 @@ export default async function Home() {
   const [sheetsProducts, sheetsContents, settings] = await Promise.all([
     fetchProducts(),
     fetchContents(),
-    Promise.resolve(getSiteSettings()),
+    getSiteSettings(),
   ]);
 
-  const localData = readSiteData();
+  const localData = await readSiteData();
 
   // Use settings with defaults
   const siteSettings = { ...DEFAULT_SETTINGS, ...settings };

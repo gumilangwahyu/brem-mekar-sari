@@ -114,10 +114,27 @@ function SettingsTab({
           Pengaturan Umum
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Nama Website" value={settings.siteName} onChange={(v) => update("siteName", v)} />
-          <InputField label="Tagline" value={settings.tagline} onChange={(v) => update("tagline", v)} />
-          <InputField label="Hero Title" value={settings.heroTitle} onChange={(v) => update("heroTitle", v)} />
-          <InputField label="Nomor WhatsApp" value={settings.waNumber} onChange={(v) => update("waNumber", v)} placeholder="628xxx" />
+          <InputField
+            label="Nama Website"
+            value={settings.siteName}
+            onChange={(v) => update("siteName", v)}
+          />
+          <InputField
+            label="Tagline"
+            value={settings.tagline}
+            onChange={(v) => update("tagline", v)}
+          />
+          <InputField
+            label="Hero Title"
+            value={settings.heroTitle}
+            onChange={(v) => update("heroTitle", v)}
+          />
+          <InputField
+            label="Nomor WhatsApp"
+            value={settings.waNumber}
+            onChange={(v) => update("waNumber", v)}
+            placeholder="628xxx"
+          />
           <InputField
             label="Hero Subtitle"
             value={settings.heroSubtitle}
@@ -137,12 +154,33 @@ function SettingsTab({
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <h3 className="font-bold text-gray-800 mb-5">Tentang Bisnis</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Teks Tentang" value={settings.aboutText} onChange={(v) => update("aboutText", v)} rows={4} />
+          <InputField
+            label="Teks Tentang"
+            value={settings.aboutText}
+            onChange={(v) => update("aboutText", v)}
+            rows={4}
+          />
           <div className="space-y-4">
-            <InputField label="Alamat" value={settings.address} onChange={(v) => update("address", v)} />
-            <InputField label="Jam Operasional" value={settings.operationalHours} onChange={(v) => update("operationalHours", v)} />
-            <InputField label="Kapasitas Produksi" value={settings.productionCapacity} onChange={(v) => update("productionCapacity", v)} />
-            <InputField label="Ketahanan Produk" value={settings.shelfLife} onChange={(v) => update("shelfLife", v)} />
+            <InputField
+              label="Alamat"
+              value={settings.address}
+              onChange={(v) => update("address", v)}
+            />
+            <InputField
+              label="Jam Operasional"
+              value={settings.operationalHours}
+              onChange={(v) => update("operationalHours", v)}
+            />
+            <InputField
+              label="Kapasitas Produksi"
+              value={settings.productionCapacity}
+              onChange={(v) => update("productionCapacity", v)}
+            />
+            <InputField
+              label="Ketahanan Produk"
+              value={settings.shelfLife}
+              onChange={(v) => update("shelfLife", v)}
+            />
           </div>
         </div>
       </div>
@@ -151,11 +189,36 @@ function SettingsTab({
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <h3 className="font-bold text-gray-800 mb-5">Link & Sosial Media</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Bitly WA Link (opsional)" value={settings.bitlyWaLink || ""} onChange={(v) => update("bitlyWaLink", v)} placeholder="https://bit.ly/xxx" />
-          <InputField label="Instagram URL" value={settings.instagramUrl || ""} onChange={(v) => update("instagramUrl", v)} placeholder="https://instagram.com/xxx" />
-          <InputField label="Facebook URL" value={settings.facebookUrl || ""} onChange={(v) => update("facebookUrl", v)} placeholder="https://facebook.com/xxx" />
-          <InputField label="TikTok URL" value={settings.tiktokUrl || ""} onChange={(v) => update("tiktokUrl", v)} placeholder="https://tiktok.com/@xxx" />
-          <InputField label="YouTube URL" value={settings.youtubeUrl || ""} onChange={(v) => update("youtubeUrl", v)} placeholder="https://youtube.com/@xxx" />
+          <InputField
+            label="Bitly WA Link (opsional)"
+            value={settings.bitlyWaLink || ""}
+            onChange={(v) => update("bitlyWaLink", v)}
+            placeholder="https://bit.ly/xxx"
+          />
+          <InputField
+            label="Instagram URL"
+            value={settings.instagramUrl || ""}
+            onChange={(v) => update("instagramUrl", v)}
+            placeholder="https://instagram.com/xxx"
+          />
+          <InputField
+            label="Facebook URL"
+            value={settings.facebookUrl || ""}
+            onChange={(v) => update("facebookUrl", v)}
+            placeholder="https://facebook.com/xxx"
+          />
+          <InputField
+            label="TikTok URL"
+            value={settings.tiktokUrl || ""}
+            onChange={(v) => update("tiktokUrl", v)}
+            placeholder="https://tiktok.com/@xxx"
+          />
+          <InputField
+            label="YouTube URL"
+            value={settings.youtubeUrl || ""}
+            onChange={(v) => update("youtubeUrl", v)}
+            placeholder="https://youtube.com/@xxx"
+          />
         </div>
       </div>
 
@@ -176,11 +239,13 @@ function ProductsTab({
   products,
   onChange,
   onSave,
+  onReset,
   saving,
 }: {
   products: Product[];
   onChange: (p: Product[]) => void;
   onSave: () => void;
+  onReset: () => void;
   saving: boolean;
 }) {
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -200,7 +265,9 @@ function ProductsTab({
   };
 
   const update = (id: string, key: keyof Product, val: string | number) => {
-    onChange(products.map((item) => (item.id === id ? { ...item, [key]: val } : item)));
+    onChange(
+      products.map((item) => (item.id === id ? { ...item, [key]: val } : item)),
+    );
   };
 
   const remove = (id: string) => {
@@ -213,27 +280,44 @@ function ProductsTab({
         <h3 className="font-bold text-gray-800">
           Manajemen Produk ({products.length} produk)
         </h3>
-        <button
-          onClick={add}
-          className="bg-green-700 hover:bg-green-600 text-white text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-xl transition-all shadow-sm"
-        >
-          <Plus size={14} />
-          Tambah Produk
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onReset}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-green-700 text-sm font-semibold rounded-xl transition-all shadow-sm border border-green-200"
+          >
+            <RefreshCw size={14} className={saving ? "animate-spin" : ""} />
+            Sinkronkan dg Sheets
+          </button>
+          <button
+            onClick={add}
+            className="bg-green-700 hover:bg-green-600 text-white text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-xl transition-all shadow-sm"
+          >
+            <Plus size={14} />
+            Tambah Produk
+          </button>
+        </div>
       </div>
 
       {products.map((product, i) => (
-        <div key={product.id || i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div
+          key={product.id || i}
+          className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+        >
           <div
             className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-            onClick={() => setExpanded(expanded === product.id ? null : product.id)}
+            onClick={() =>
+              setExpanded(expanded === product.id ? null : product.id)
+            }
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center text-sm">
                 🍬
               </div>
               <div>
-                <p className="font-semibold text-gray-800 text-sm">{product.nama}</p>
+                <p className="font-semibold text-gray-800 text-sm">
+                  {product.nama}
+                </p>
                 <p className="text-green-600 text-xs font-medium">
                   Rp {Number(product.harga || 0).toLocaleString("id-ID")}
                 </p>
@@ -251,23 +335,59 @@ function ProductsTab({
                 Edit
               </button>
               <button
-                onClick={(e) => { e.stopPropagation(); remove(product.id); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  remove(product.id);
+                }}
                 className="w-7 h-7 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
               >
                 <Trash2 size={14} />
               </button>
-              {expanded === product.id ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+              {expanded === product.id ? (
+                <ChevronUp size={16} className="text-gray-400" />
+              ) : (
+                <ChevronDown size={16} className="text-gray-400" />
+              )}
             </div>
           </div>
 
           {expanded === product.id && (
             <div className="border-t border-gray-100 p-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50/30">
-              <InputField label="Nama Produk" value={product.nama} onChange={(v) => update(product.id, "nama", v)} />
-              <InputField label="Harga (Rp)" value={String(product.harga)} type="number" onChange={(v) => update(product.id, "harga", v)} />
-              <InputField label="Deskripsi" value={product.deksripsi} onChange={(v) => update(product.id, "deksripsi", v)} rows={2} />
-              <InputField label="Link Gambar" value={product.link_gambar} onChange={(v) => update(product.id, "link_gambar", v)} placeholder="https://drive.google.com/..." />
-              <InputField label="Kategori (opsional)" value={product.kategori || ""} onChange={(v) => update(product.id, "kategori", v)} placeholder="Eceran / Grosir" />
-              <InputField label="Berat (opsional)" value={product.berat || ""} onChange={(v) => update(product.id, "berat", v)} placeholder="500g / 1kg" />
+              <InputField
+                label="Nama Produk"
+                value={product.nama}
+                onChange={(v) => update(product.id, "nama", v)}
+              />
+              <InputField
+                label="Harga (Rp)"
+                value={String(product.harga)}
+                type="number"
+                onChange={(v) => update(product.id, "harga", v)}
+              />
+              <InputField
+                label="Deskripsi"
+                value={product.deksripsi}
+                onChange={(v) => update(product.id, "deksripsi", v)}
+                rows={2}
+              />
+              <InputField
+                label="Link Gambar"
+                value={product.link_gambar}
+                onChange={(v) => update(product.id, "link_gambar", v)}
+                placeholder="https://drive.google.com/..."
+              />
+              <InputField
+                label="Kategori (opsional)"
+                value={product.kategori || ""}
+                onChange={(v) => update(product.id, "kategori", v)}
+                placeholder="Eceran / Grosir"
+              />
+              <InputField
+                label="Berat (opsional)"
+                value={product.berat || ""}
+                onChange={(v) => update(product.id, "berat", v)}
+                placeholder="500g / 1kg"
+              />
             </div>
           )}
         </div>
@@ -290,11 +410,13 @@ function ContentsTab({
   contents,
   onChange,
   onSave,
+  onReset,
   saving,
 }: {
   contents: ContentItem[];
   onChange: (c: ContentItem[]) => void;
   onSave: () => void;
+  onReset: () => void;
   saving: boolean;
 }) {
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -312,7 +434,9 @@ function ContentsTab({
   };
 
   const update = (id: string, key: keyof ContentItem, val: string) => {
-    onChange(contents.map((item) => (item.id === id ? { ...item, [key]: val } : item)));
+    onChange(
+      contents.map((item) => (item.id === id ? { ...item, [key]: val } : item)),
+    );
   };
 
   const remove = (id: string) => {
@@ -325,30 +449,49 @@ function ContentsTab({
         <h3 className="font-bold text-gray-800">
           Manajemen Konten ({contents.length} item)
         </h3>
-        <button
-          onClick={add}
-          className="bg-green-700 hover:bg-green-600 text-white text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-xl transition-all shadow-sm"
-        >
-          <Plus size={14} />
-          Tambah Konten
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onReset}
+            disabled={saving}
+            className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-green-700 text-sm font-semibold rounded-xl transition-all shadow-sm border border-green-200"
+          >
+            <RefreshCw size={14} className={saving ? "animate-spin" : ""} />
+            Sinkronkan dg Sheets
+          </button>
+          <button
+            onClick={add}
+            className="bg-green-700 hover:bg-green-600 text-white text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-xl transition-all shadow-sm"
+          >
+            <Plus size={14} />
+            Tambah Konten
+          </button>
+        </div>
       </div>
 
       {contents.map((item, i) => (
-        <div key={item.id || i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div
+          key={item.id || i}
+          className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+        >
           <div
             className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
             onClick={() => setExpanded(expanded === item.id ? null : item.id)}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white ${
-                item.tipe === "video" ? "bg-red-500" : "bg-green-600"
-              }`}>
+              <div
+                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white ${
+                  item.tipe === "video" ? "bg-red-500" : "bg-green-600"
+                }`}
+              >
                 {item.tipe === "video" ? "▶" : "📷"}
               </div>
               <div>
-                <p className="font-semibold text-gray-800 text-sm">{item.judul}</p>
-                <p className="text-gray-400 text-xs">{item.tipe === "video" ? "Video" : "Foto"}</p>
+                <p className="font-semibold text-gray-800 text-sm">
+                  {item.judul}
+                </p>
+                <p className="text-gray-400 text-xs">
+                  {item.tipe === "video" ? "Video" : "Foto"}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-2.5">
@@ -363,20 +506,33 @@ function ContentsTab({
                 Edit
               </button>
               <button
-                onClick={(e) => { e.stopPropagation(); remove(item.id); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  remove(item.id);
+                }}
                 className="w-7 h-7 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
               >
                 <Trash2 size={14} />
               </button>
-              {expanded === item.id ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+              {expanded === item.id ? (
+                <ChevronUp size={16} className="text-gray-400" />
+              ) : (
+                <ChevronDown size={16} className="text-gray-400" />
+              )}
             </div>
           </div>
 
           {expanded === item.id && (
             <div className="border-t border-gray-100 p-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50/30">
-              <InputField label="Judul" value={item.judul} onChange={(v) => update(item.id, "judul", v)} />
+              <InputField
+                label="Judul"
+                value={item.judul}
+                onChange={(v) => update(item.id, "judul", v)}
+              />
               <div>
-                <label className="text-xs font-bold text-gray-600 block mb-1.5 uppercase tracking-wide">Tipe</label>
+                <label className="text-xs font-bold text-gray-600 block mb-1.5 uppercase tracking-wide">
+                  Tipe
+                </label>
                 <select
                   value={item.tipe}
                   onChange={(e) => update(item.id, "tipe", e.target.value)}
@@ -390,9 +546,18 @@ function ContentsTab({
                 label="Link (Google Drive / YouTube)"
                 value={item.link}
                 onChange={(v) => update(item.id, "link", v)}
-                placeholder={item.tipe === "video" ? "https://youtube.com/..." : "https://drive.google.com/..."}
+                placeholder={
+                  item.tipe === "video"
+                    ? "https://youtube.com/..."
+                    : "https://drive.google.com/..."
+                }
               />
-              <InputField label="Deskripsi (opsional)" value={item.deskripsi || ""} onChange={(v) => update(item.id, "deskripsi", v)} rows={2} />
+              <InputField
+                label="Deskripsi (opsional)"
+                value={item.deskripsi || ""}
+                onChange={(v) => update(item.id, "deskripsi", v)}
+                rows={2}
+              />
             </div>
           )}
         </div>
@@ -453,14 +618,20 @@ export default function AdminPage() {
     overrideContents?: boolean;
   }) => {
     setSaving(true);
-    
+
     // Construct consolidated payload combining the updated data and current sibling state in parent
     const payload = {
       settings: customPayload?.settings || settings,
       products: customPayload?.products || products,
       contents: customPayload?.contents || contents,
-      overrideProducts: customPayload?.overrideProducts !== undefined ? customPayload.overrideProducts : true,
-      overrideContents: customPayload?.overrideContents !== undefined ? customPayload.overrideContents : true,
+      overrideProducts:
+        customPayload?.overrideProducts !== undefined
+          ? customPayload.overrideProducts
+          : true,
+      overrideContents:
+        customPayload?.overrideContents !== undefined
+          ? customPayload.overrideContents
+          : true,
     };
 
     try {
@@ -472,13 +643,54 @@ export default function AdminPage() {
 
       if (res.ok) {
         showToast("✅ Perubahan berhasil disimpan secara permanen!");
-        
+
         // Sync local states
         if (customPayload?.settings) setSettings(customPayload.settings);
         if (customPayload?.products) setProducts(customPayload.products);
         if (customPayload?.contents) setContents(customPayload.contents);
       } else {
         showToast("❌ Gagal menyimpan perubahan.");
+      }
+    } catch (e) {
+      console.error(e);
+      showToast("❌ Terjadi kesalahan koneksi.");
+    }
+    setSaving(false);
+  };
+
+  const handleReset = async (type: "products" | "contents") => {
+    const isConfirmed = window.confirm(
+      `Apakah Anda yakin ingin menyinkronkan ulang data ${
+        type === "products" ? "Produk" : "Konten"
+      } dengan Google Sheets? Semua perubahan lokal di Admin Panel akan ditimpa dengan data Google Sheets.`,
+    );
+    if (!isConfirmed) return;
+
+    setSaving(true);
+    try {
+      const payload: any = {
+        settings,
+        products: type === "products" ? [] : products,
+        contents: type === "contents" ? [] : contents,
+      };
+
+      if (type === "products") {
+        payload.overrideProducts = false;
+      } else {
+        payload.overrideContents = false;
+      }
+
+      const res = await fetch("/api/admin/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        showToast("🔄 Berhasil disinkronkan dengan Google Sheets!");
+        await fetchData();
+      } else {
+        showToast("❌ Gagal menyinkronkan data.");
       }
     } catch (e) {
       console.error(e);
@@ -499,16 +711,41 @@ export default function AdminPage() {
         {/* Logo */}
         <div className="p-5 border-b border-green-800 flex flex-col items-center">
           <div className="relative w-16 h-16 bg-white/5 border border-green-700/30 rounded-full overflow-hidden mb-2 flex items-center justify-center">
-            <Image src="/logo.png" alt="Brem Mekar Sari 1" fill className="object-contain p-0.5" />
+            <Image
+              src="/logo.png"
+              alt="Brem Mekar Sari 1"
+              fill
+              className="object-contain p-0.5"
+            />
           </div>
-          <p className="text-green-400 text-xs text-center font-semibold">Admin Panel</p>
+          <p className="text-green-400 text-xs text-center font-semibold">
+            Admin Panel
+          </p>
         </div>
 
         {/* Nav */}
         <nav className="flex-1 p-4 space-y-2">
-          <TabButton tab="settings" active={activeTab === "settings"} onClick={() => setActiveTab("settings")} icon={Settings} label="Pengaturan" />
-          <TabButton tab="products" active={activeTab === "products"} onClick={() => setActiveTab("products")} icon={Package} label="Produk" />
-          <TabButton tab="contents" active={activeTab === "contents"} onClick={() => setActiveTab("contents")} icon={ImageIcon} label="Konten" />
+          <TabButton
+            tab="settings"
+            active={activeTab === "settings"}
+            onClick={() => setActiveTab("settings")}
+            icon={Settings}
+            label="Pengaturan"
+          />
+          <TabButton
+            tab="products"
+            active={activeTab === "products"}
+            onClick={() => setActiveTab("products")}
+            icon={Package}
+            label="Produk"
+          />
+          <TabButton
+            tab="contents"
+            active={activeTab === "contents"}
+            onClick={() => setActiveTab("contents")}
+            icon={ImageIcon}
+            label="Konten"
+          />
         </nav>
 
         {/* Bottom actions */}
@@ -575,6 +812,7 @@ export default function AdminPage() {
                 products={products}
                 onChange={setProducts}
                 onSave={() => handleSave({ products, overrideProducts: true })}
+                onReset={() => handleReset("products")}
                 saving={saving}
               />
             )}
@@ -583,6 +821,7 @@ export default function AdminPage() {
                 contents={contents}
                 onChange={setContents}
                 onSave={() => handleSave({ contents, overrideContents: true })}
+                onReset={() => handleReset("contents")}
                 saving={saving}
               />
             )}
