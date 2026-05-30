@@ -90,6 +90,123 @@ function InputField({
   );
 }
 
+// --- Image Uploader Component (Supabase Storage integration) ---
+function ImageUploader({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (val: string) => void;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check size limit (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Ukuran gambar maksimal 5MB.");
+      return;
+    }
+
+    setUploading(true);
+    setError(null);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok && data.url) {
+        onChange(data.url);
+      } else {
+        setError(data.error || "Gagal mengunggah gambar.");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Koneksi gagal saat mengunggah.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Convert target label into a unique id safe for html attributes
+  const safeId = `uploader-${label.toLowerCase().replace(/[^a-z0-9]/g, "-")}`;
+
+  return (
+    <div>
+      <label className="text-xs font-bold text-gray-600 block mb-1.5 uppercase tracking-wide">
+        {label}
+      </label>
+      <div className="flex flex-col sm:flex-row gap-3 items-stretch">
+        <div className="flex-1">
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="Salin url atau pilih berkas gambar di samping ➡️"
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100 transition-all"
+          />
+        </div>
+        <div className="relative flex items-center justify-center shrink-0">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            disabled={uploading}
+            id={safeId}
+            className="hidden"
+          />
+          <label
+            htmlFor={safeId}
+            className={`w-full sm:w-auto px-5 py-3 rounded-xl border text-sm font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all shadow-sm ${
+              uploading
+                ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+            }`}
+          >
+            {uploading ? (
+              <>
+                <RefreshCw size={14} className="animate-spin" />
+                Unggah...
+              </>
+            ) : (
+              <>
+                <Plus size={14} />
+                Pilih File
+              </>
+            )}
+          </label>
+        </div>
+      </div>
+      {error && (
+        <p className="text-xs text-red-500 font-medium mt-1.5">{error}</p>
+      )}
+      {value && (
+        <div className="mt-2.5 relative w-24 h-16 rounded-lg overflow-hidden border border-gray-100 bg-gray-50 shadow-sm flex items-center justify-center">
+          <img
+            src={value}
+            alt="Preview"
+            className="object-contain w-full h-full p-1"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = "none";
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 // --- Settings Tab ---
 function SettingsTab({
   settings,
@@ -370,23 +487,22 @@ function ProductsTab({
                 onChange={(v) => update(product.id, "deksripsi", v)}
                 rows={2}
               />
-              <InputField
-                label="Link Gambar"
+              <ImageUploader
+                label="Gambar Produk"
                 value={product.link_gambar}
                 onChange={(v) => update(product.id, "link_gambar", v)}
-                placeholder="https://drive.google.com/..."
               />
               <InputField
                 label="Kategori (opsional)"
                 value={product.kategori || ""}
                 onChange={(v) => update(product.id, "kategori", v)}
-                placeholder="Eceran / Grosir"
+                placeholder="Grosir / Distributor"
               />
               <InputField
                 label="Berat (opsional)"
                 value={product.berat || ""}
                 onChange={(v) => update(product.id, "berat", v)}
-                placeholder="500g / 1kg"
+                placeholder="10kg / 20kg"
               />
             </div>
           )}
@@ -542,16 +658,20 @@ function ContentsTab({
                   <option value="video">▶️ Video</option>
                 </select>
               </div>
-              <InputField
-                label="Link (Google Drive / YouTube)"
-                value={item.link}
-                onChange={(v) => update(item.id, "link", v)}
-                placeholder={
-                  item.tipe === "video"
-                    ? "https://youtube.com/..."
-                    : "https://drive.google.com/..."
-                }
-              />
+              {item.tipe === "foto" ? (
+                <ImageUploader
+                  label="Gambar Konten"
+                  value={item.link}
+                  onChange={(v) => update(item.id, "link", v)}
+                />
+              ) : (
+                <InputField
+                  label="Link Video (YouTube)"
+                  value={item.link}
+                  onChange={(v) => update(item.id, "link", v)}
+                  placeholder="https://youtube.com/..."
+                />
+              )}
               <InputField
                 label="Deskripsi (opsional)"
                 value={item.deskripsi || ""}

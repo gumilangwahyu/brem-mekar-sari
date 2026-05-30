@@ -12,7 +12,7 @@ const navLinks = [
   { href: "#kontak", label: "Kontak" },
 ];
 
-export default function Navbar() {
+export default function Navbar({ waNumber }: { waNumber?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -22,8 +22,8 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const waNumber = process.env.NEXT_PUBLIC_WA_NUMBER || "6285212312312";
-  const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent("Halo Mekar Sari 1, saya ingin memesan brem premium!")}`;
+  const finalWaNumber = waNumber || process.env.NEXT_PUBLIC_WA_NUMBER || "6285212312312";
+  const waUrl = `https://wa.me/${finalWaNumber}?text=${encodeURIComponent("Halo Brem Mekar Sari 1! Saya ingin bertanya mengenai pemesanan grosir.")}`;
 
   return (
     <nav

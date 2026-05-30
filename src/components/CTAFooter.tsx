@@ -47,7 +47,7 @@ export function CTASection({ settings }: CTASectionProps) {
 
         <p className="text-green-100/90 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
           Hubungi kami sekarang dan dapatkan informasi harga terbaik.
-          Kami siap melayani pesanan eceran maupun grosir dengan penuh dedikasi.
+          Kami melayani pesanan grosir dengan minimal pemesanan 10 KG.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">

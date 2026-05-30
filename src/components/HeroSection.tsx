@@ -60,15 +60,20 @@ export default function HeroSection({ settings }: HeroSectionProps) {
 
             {/* Headline */}
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.05] mb-6">
-              Brem{" "}
-              <span className="relative inline-block">
-                <span className="text-yellow-400">Premium</span>
-                <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 200 6" fill="none">
-                  <path d="M2 4C50 1 150 1 198 4" stroke="#facc15" strokeWidth="2.5" strokeLinecap="round" />
-                </svg>
-              </span>
-              <br />
-              <span className="text-green-300">Wonogiri</span>
+              {settings.heroTitle.split(" ").map((part, index, arr) => {
+                const isPremium = part.toLowerCase().includes("premium");
+                if (isPremium) {
+                  return (
+                    <span key={index} className="relative inline-block mr-2 sm:mr-3">
+                      <span className="text-yellow-400">{part}</span>
+                      <svg className="absolute -bottom-1 left-0 w-full" viewBox="0 0 200 6" fill="none">
+                        <path d="M2 4C50 1 150 1 198 4" stroke="#facc15" strokeWidth="2.5" strokeLinecap="round" />
+                      </svg>
+                    </span>
+                  );
+                }
+                return <span key={index} className="mr-2 sm:mr-3">{part}</span>;
+              })}
             </h1>
 
             {/* Subtitle */}

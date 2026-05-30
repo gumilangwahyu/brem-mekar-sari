@@ -16,7 +16,7 @@ function ProductCard({ product, waNumber, index }: ProductCardProps) {
 
   const hasValidImage = !imgError && !!product.link_gambar;
 
-  const orderMsg = `Halo Mekar Sari 1! Saya tertarik dengan *${product.nama}* (Rp ${Number(product.harga).toLocaleString("id-ID")}). Apakah stok masih tersedia?`;
+  const orderMsg = `Halo Mekar Sari 1! Saya tertarik untuk memesan grosir produk *${product.nama}* (Rp ${Number(product.harga).toLocaleString("id-ID")}) dengan minimal pemesanan 10 KG.`;
   const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(orderMsg)}`;
 
   return (
@@ -123,8 +123,8 @@ export default function ProductsSection({ products, waNumber }: ProductsSectionP
             <span className="text-green-700">Premium</span>
           </h2>
           <p className="mt-4 text-gray-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-            Setiap produk dibuat dengan standar kualitas tinggi menggunakan beras ketan super
-            pilihan. Tersedia berbagai kemasan sesuai kebutuhan Anda.
+            Setiap produk dibuat dengan standar kualitas tinggi menggunakan beras ketan super pilihan.
+            <strong className="text-green-800 block mt-2">Kami hanya melayani pemesanan grosir dengan minimal pembelian 10 KG.</strong>
           </p>
         </div>
 
@@ -150,8 +150,8 @@ export default function ProductsSection({ products, waNumber }: ProductsSectionP
 
         {/* Bottom CTA */}
         <div className="text-center mt-14 bg-green-50 rounded-3xl p-8 border border-green-100">
-          <p className="text-green-800 font-semibold text-base mb-1">Butuh pembelian jumlah besar?</p>
-          <p className="text-gray-500 text-sm mb-5">Kami melayani grosir untuk reseller, toko oleh-oleh, dan event.</p>
+          <p className="text-green-800 font-bold text-lg mb-1">Pemesanan Grosir Minimal 10 KG</p>
+          <p className="text-gray-500 text-sm mb-5">Kami melayani pemesanan grosir skala besar untuk reseller, toko oleh-oleh, dan distributor resmi.</p>
           <a
             href={waUrl}
             target="_blank"

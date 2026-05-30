@@ -9,7 +9,17 @@ import GallerySection from "@/components/GallerySection";
 import { CTASection, Footer } from "@/components/CTAFooter";
 import FloatingWAButton from "@/components/FloatingWAButton";
 
+import { Metadata } from "next";
+
 export const revalidate = 0; // Disable server cache for real-time changes
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  return {
+    title: `${settings.siteName} | ${settings.tagline}`,
+    description: settings.heroSubtitle,
+  };
+}
 
 export default async function Home() {
   // Fetch data in parallel
@@ -36,7 +46,7 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen">
-      <Navbar />
+      <Navbar waNumber={siteSettings.waNumber} />
       <HeroSection settings={siteSettings} />
       <StatsSection />
       <AboutSection settings={siteSettings} />
