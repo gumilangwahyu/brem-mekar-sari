@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { SiteSettings, Product, ContentItem } from "@/types";
+import { SiteSettings, Product, ContentItem, FAQItem } from "@/types";
 import { DEFAULT_SETTINGS } from "@/lib/sheets";
 import {
   Settings,
@@ -17,9 +17,10 @@ import {
   ChevronUp,
   Eye,
   Pencil,
+  HelpCircle,
 } from "lucide-react";
 
-type Tab = "settings" | "products" | "contents";
+type Tab = "settings" | "products" | "contents" | "faqs";
 
 function TabButton({
   tab,
@@ -695,12 +696,144 @@ function ContentsTab({
   );
 }
 
+// --- FAQs Tab ---
+function FAQsTab({
+  faqs,
+  onChange,
+  onSave,
+  saving,
+}: {
+  faqs: FAQItem[];
+  onChange: (f: FAQItem[]) => void;
+  onSave: () => void;
+  saving: boolean;
+}) {
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  const add = () => {
+    const newItem: FAQItem = {
+      id: Date.now().toString(),
+      q: "Pertanyaan Baru",
+      a: "",
+    };
+    onChange([...faqs, newItem]);
+    setExpanded(newItem.id);
+  };
+
+  const update = (id: string, key: keyof FAQItem, val: string) => {
+    onChange(
+      faqs.map((item) => (item.id === id ? { ...item, [key]: val } : item)),
+    );
+  };
+
+  const remove = (id: string) => {
+    const isConfirmed = window.confirm("Apakah Anda yakin ingin menghapus FAQ ini?");
+    if (!isConfirmed) return;
+    onChange(faqs.filter((item) => item.id !== id));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="font-bold text-gray-800">
+          Manajemen Tanya Jawab ({faqs.length} item)
+        </h3>
+        <button
+          onClick={add}
+          className="bg-green-700 hover:bg-green-600 text-white text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-xl transition-all shadow-sm"
+        >
+          <Plus size={14} />
+          Tambah FAQ
+        </button>
+      </div>
+
+      {faqs.map((item, i) => (
+        <div
+          key={item.id || i}
+          className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-fade-in"
+        >
+          <div
+            className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+            onClick={() => setExpanded(expanded === item.id ? null : item.id)}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold text-white bg-green-700">
+                ❓
+              </div>
+              <div>
+                <p className="font-semibold text-gray-800 text-sm">
+                  {item.q || "Pertanyaan Baru"}
+                </p>
+                <p className="text-gray-400 text-xs">
+                  {item.a ? item.a.substring(0, 60) + (item.a.length > 60 ? "..." : "") : "Belum ada jawaban"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpanded(expanded === item.id ? null : item.id);
+                }}
+                className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-green-50 text-green-700 hover:bg-green-100 rounded-lg transition-colors border border-green-100"
+              >
+                <Pencil size={12} />
+                Edit
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  remove(item.id);
+                }}
+                className="w-7 h-7 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                <Trash2 size={14} />
+              </button>
+              {expanded === item.id ? (
+                <ChevronUp size={16} className="text-gray-400" />
+              ) : (
+                <ChevronDown size={16} className="text-gray-400" />
+              )}
+            </div>
+          </div>
+
+          {expanded === item.id && (
+            <div className="border-t border-gray-100 p-4 grid grid-cols-1 gap-4 bg-gray-50/30">
+              <InputField
+                label="Pertanyaan"
+                value={item.q}
+                onChange={(v) => update(item.id, "q", v)}
+              />
+              <InputField
+                label="Jawaban"
+                value={item.a}
+                onChange={(v) => update(item.id, "a", v)}
+                rows={4}
+              />
+            </div>
+          )}
+        </div>
+      ))}
+
+      <button
+        onClick={onSave}
+        disabled={saving}
+        className="bg-green-700 hover:bg-green-600 text-white font-bold flex items-center gap-2 px-8 py-3.5 rounded-xl disabled:opacity-60 transition-all shadow-md mt-4"
+      >
+        <Save size={16} />
+        {saving ? "Menyimpan..." : "Simpan Semua FAQ"}
+      </button>
+    </div>
+  );
+}
+
 // --- Main Admin Page ---
 export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<Tab>("settings");
   const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
   const [products, setProducts] = useState<Product[]>([]);
   const [contents, setContents] = useState<ContentItem[]>([]);
+  const [faqs, setFaqs] = useState<FAQItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -719,6 +852,7 @@ export default function AdminPage() {
       setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
       setProducts(data.products || []);
       setContents(data.contents || []);
+      setFaqs(data.faqs || []);
     } catch (e) {
       console.error("Gagal memuat data:", e);
       showToast("❌ Gagal mengambil data terbaru.");
@@ -734,6 +868,7 @@ export default function AdminPage() {
     settings?: SiteSettings;
     products?: Product[];
     contents?: ContentItem[];
+    faqs?: FAQItem[];
     overrideProducts?: boolean;
     overrideContents?: boolean;
   }) => {
@@ -744,6 +879,7 @@ export default function AdminPage() {
       settings: customPayload?.settings || settings,
       products: customPayload?.products || products,
       contents: customPayload?.contents || contents,
+      faqs: customPayload?.faqs || faqs,
       overrideProducts:
         customPayload?.overrideProducts !== undefined
           ? customPayload.overrideProducts
@@ -768,6 +904,7 @@ export default function AdminPage() {
         if (customPayload?.settings) setSettings(customPayload.settings);
         if (customPayload?.products) setProducts(customPayload.products);
         if (customPayload?.contents) setContents(customPayload.contents);
+        if (customPayload?.faqs) setFaqs(customPayload.faqs);
       } else {
         showToast("❌ Gagal menyimpan perubahan.");
       }
@@ -866,6 +1003,13 @@ export default function AdminPage() {
             icon={ImageIcon}
             label="Konten"
           />
+          <TabButton
+            tab="faqs"
+            active={activeTab === "faqs"}
+            onClick={() => setActiveTab("faqs")}
+            icon={HelpCircle}
+            label="FAQ"
+          />
         </nav>
 
         {/* Bottom actions */}
@@ -904,6 +1048,7 @@ export default function AdminPage() {
             {activeTab === "settings" && "Pengaturan Website"}
             {activeTab === "products" && "Manajemen Produk"}
             {activeTab === "contents" && "Manajemen Konten"}
+            {activeTab === "faqs" && "Manajemen Tanya Jawab (FAQ)"}
           </h1>
           <p className="text-gray-500 text-sm mt-1">
             Kelola data website Brem Mekar Sari 1
@@ -942,6 +1087,14 @@ export default function AdminPage() {
                 onChange={setContents}
                 onSave={() => handleSave({ contents, overrideContents: true })}
                 onReset={() => handleReset("contents")}
+                saving={saving}
+              />
+            )}
+            {activeTab === "faqs" && (
+              <FAQsTab
+                faqs={faqs}
+                onChange={setFaqs}
+                onSave={() => handleSave({ faqs })}
                 saving={saving}
               />
             )}

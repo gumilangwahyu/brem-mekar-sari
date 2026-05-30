@@ -39,8 +39,15 @@ export interface SiteSettings {
   youtubeUrl?: string;
 }
 
+export interface FAQItem {
+  id: string;
+  q: string;
+  a: string;
+}
+
 export interface AdminData {
   products: Product[];
   contents: ContentItem[];
   settings: SiteSettings;
+  faqs?: FAQItem[];
 }

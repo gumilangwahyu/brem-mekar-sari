@@ -6,6 +6,7 @@ import StatsSection from "@/components/StatsSection";
 import AboutSection from "@/components/AboutSection";
 import ProductsSection from "@/components/ProductsSection";
 import GallerySection from "@/components/GallerySection";
+import { TrustSection, QualityCommitmentSection, FAQSection } from "@/components/InteractiveTrust";
 import { CTASection, Footer } from "@/components/CTAFooter";
 import FloatingWAButton from "@/components/FloatingWAButton";
 
@@ -49,12 +50,15 @@ export default async function Home() {
       <Navbar waNumber={siteSettings.waNumber} />
       <HeroSection settings={siteSettings} />
       <StatsSection />
+      <TrustSection />
       <AboutSection settings={siteSettings} />
       <ProductsSection
         products={products}
         waNumber={siteSettings.waNumber}
       />
       <GallerySection contents={contents} />
+      <QualityCommitmentSection />
+      <FAQSection faqs={localData.faqs} />
       <CTASection settings={siteSettings} />
       <Footer settings={siteSettings} />
       <FloatingWAButton

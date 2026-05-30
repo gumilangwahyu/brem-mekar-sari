@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { createClient } from "@supabase/supabase-js";
-import { SiteSettings, Product, ContentItem } from "@/types";
+import { SiteSettings, Product, ContentItem, FAQItem } from "@/types";
 import { DEFAULT_SETTINGS } from "./sheets";
 
 const DATA_FILE = path.join(process.cwd(), "data", "site-data.json");
@@ -10,9 +10,38 @@ interface SiteData {
   settings: SiteSettings;
   products: Product[];
   contents: ContentItem[];
+  faqs?: FAQItem[];
   overrideProducts: boolean;
   overrideContents: boolean;
 }
+
+export const DEFAULT_FAQS: FAQItem[] = [
+  {
+    id: "faq-1",
+    q: "Berapa minimal pembelian grosir di Brem Mekar Sari 1?",
+    a: "Minimal pemesanan grosir kami adalah 10 KG. Kami memproduksi brem secara terjadwal dan segar berdasarkan pesanan untuk memastikan Anda menerima produk dengan kualitas terbaik dan masa simpan maksimal.",
+  },
+  {
+    id: "faq-2",
+    q: "Apakah bisa mengirimkan produk ke luar Jawa?",
+    a: "Ya, tentu saja! Kami melayani pengiriman ke seluruh penjuru Indonesia. Kami bekerja sama dengan jasa ekspedisi kargo tepercaya (baik darat, laut, maupun udara) untuk memberikan tarif ongkos kirim yang paling murah dan aman untuk paket berat.",
+  },
+  {
+    id: "faq-3",
+    q: "Bagaimana dengan kualitas kebersihan dan keaslian bahan?",
+    a: "Kami menjamin 100% menggunakan beras ketan murni pilihan (tanpa campuran tepung beras) dan gula asli. Proses produksi dikelola secara higienis dengan standar kebersihan keluarga tradisional yang diwariskan selama 3 generasi.",
+  },
+  {
+    id: "faq-4",
+    q: "Berapa lama daya simpan (kadaluwarsa) Brem Mekar Sari 1?",
+    a: "Brem kami dapat bertahan secara alami hingga 6 bulan. Kuncinya terletak pada teknik fermentasi ketan yang presisi dan proses penjemuran tradisional yang optimal, sehingga tidak membutuhkan bahan pengawet kimia tambahan.",
+  },
+  {
+    id: "faq-5",
+    q: "Apakah tersedia harga khusus untuk reseller atau distributor besar?",
+    a: "Ya! Semakin besar jumlah pemesanan Anda, semakin murah harga per kilogram yang kami tawarkan. Kami berkomitmen mendukung keuntungan maksimal bagi mitra toko oleh-oleh, distributor daerah, maupun reseller mandiri.",
+  },
+];
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
@@ -41,7 +70,9 @@ export async function readSiteData(): Promise<SiteData> {
         .single();
 
       if (!error && data && data.data) {
-        return data.data as SiteData;
+        const parsed = data.data as SiteData;
+        if (!parsed.faqs) parsed.faqs = DEFAULT_FAQS;
+        return parsed;
       }
 
       // If the row doesn't exist, seed a default row
@@ -50,6 +81,7 @@ export async function readSiteData(): Promise<SiteData> {
           settings: DEFAULT_SETTINGS,
           products: [],
           contents: [],
+          faqs: DEFAULT_FAQS,
           overrideProducts: false,
           overrideContents: false,
         };
@@ -69,7 +101,9 @@ export async function readSiteData(): Promise<SiteData> {
     ensureDataDir();
     if (fs.existsSync(DATA_FILE)) {
       const raw = fs.readFileSync(DATA_FILE, "utf-8");
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      if (!parsed.faqs) parsed.faqs = DEFAULT_FAQS;
+      return parsed;
     }
   } catch (e) {
     console.error("Error reading site data file:", e);
@@ -79,6 +113,7 @@ export async function readSiteData(): Promise<SiteData> {
     settings: DEFAULT_SETTINGS,
     products: [],
     contents: [],
+    faqs: DEFAULT_FAQS,
     overrideProducts: false,
     overrideContents: false,
   };
