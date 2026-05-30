@@ -129,13 +129,13 @@ export default function HeroSection({ settings }: HeroSectionProps) {
 
               {/* Main brand card */}
               <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-2xl">
-                {/* Logo landscape display */}
-                <div className="relative w-full aspect-[2/1] rounded-2xl overflow-hidden bg-white shadow-xl mb-5">
+                {/* Logo circular display */}
+                <div className="relative w-28 h-28 mx-auto rounded-full overflow-hidden bg-white/5 border border-white/10 shadow-xl mb-5 flex items-center justify-center">
                   <Image
                     src="/logo.png"
                     alt="Brem Mekar Sari 1"
                     fill
-                    className="object-contain p-3"
+                    className="object-contain p-0.5"
                     priority
                   />
                 </div>

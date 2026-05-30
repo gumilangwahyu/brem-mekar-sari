@@ -13,11 +13,10 @@ import {
   Plus,
   Trash2,
   RefreshCw,
-  Home,
   ChevronDown,
   ChevronUp,
   Eye,
-  EyeOff,
+  Pencil,
 } from "lucide-react";
 
 type Tab = "settings" | "products" | "contents";
@@ -94,21 +93,17 @@ function InputField({
 // --- Settings Tab ---
 function SettingsTab({
   settings,
+  onChange,
   onSave,
   saving,
 }: {
   settings: SiteSettings;
-  onSave: (s: SiteSettings) => void;
+  onChange: (s: SiteSettings) => void;
+  onSave: () => void;
   saving: boolean;
 }) {
-  const [form, setForm] = useState<SiteSettings>(settings);
-
-  useEffect(() => {
-    setForm(settings);
-  }, [settings]);
-
   const update = (key: keyof SiteSettings, val: string) =>
-    setForm((f) => ({ ...f, [key]: val }));
+    onChange({ ...settings, [key]: val });
 
   return (
     <div className="space-y-8">
@@ -119,19 +114,19 @@ function SettingsTab({
           Pengaturan Umum
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Nama Website" value={form.siteName} onChange={(v) => update("siteName", v)} />
-          <InputField label="Tagline" value={form.tagline} onChange={(v) => update("tagline", v)} />
-          <InputField label="Hero Title" value={form.heroTitle} onChange={(v) => update("heroTitle", v)} />
-          <InputField label="Nomor WhatsApp" value={form.waNumber} onChange={(v) => update("waNumber", v)} placeholder="628xxx" />
+          <InputField label="Nama Website" value={settings.siteName} onChange={(v) => update("siteName", v)} />
+          <InputField label="Tagline" value={settings.tagline} onChange={(v) => update("tagline", v)} />
+          <InputField label="Hero Title" value={settings.heroTitle} onChange={(v) => update("heroTitle", v)} />
+          <InputField label="Nomor WhatsApp" value={settings.waNumber} onChange={(v) => update("waNumber", v)} placeholder="628xxx" />
           <InputField
             label="Hero Subtitle"
-            value={form.heroSubtitle}
+            value={settings.heroSubtitle}
             onChange={(v) => update("heroSubtitle", v)}
             rows={3}
           />
           <InputField
             label="Pesan WA Default"
-            value={form.waMessage}
+            value={settings.waMessage}
             onChange={(v) => update("waMessage", v)}
             rows={3}
           />
@@ -142,12 +137,12 @@ function SettingsTab({
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <h3 className="font-bold text-gray-800 mb-5">Tentang Bisnis</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Teks Tentang" value={form.aboutText} onChange={(v) => update("aboutText", v)} rows={4} />
+          <InputField label="Teks Tentang" value={settings.aboutText} onChange={(v) => update("aboutText", v)} rows={4} />
           <div className="space-y-4">
-            <InputField label="Alamat" value={form.address} onChange={(v) => update("address", v)} />
-            <InputField label="Jam Operasional" value={form.operationalHours} onChange={(v) => update("operationalHours", v)} />
-            <InputField label="Kapasitas Produksi" value={form.productionCapacity} onChange={(v) => update("productionCapacity", v)} />
-            <InputField label="Ketahanan Produk" value={form.shelfLife} onChange={(v) => update("shelfLife", v)} />
+            <InputField label="Alamat" value={settings.address} onChange={(v) => update("address", v)} />
+            <InputField label="Jam Operasional" value={settings.operationalHours} onChange={(v) => update("operationalHours", v)} />
+            <InputField label="Kapasitas Produksi" value={settings.productionCapacity} onChange={(v) => update("productionCapacity", v)} />
+            <InputField label="Ketahanan Produk" value={settings.shelfLife} onChange={(v) => update("shelfLife", v)} />
           </div>
         </div>
       </div>
@@ -156,18 +151,18 @@ function SettingsTab({
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <h3 className="font-bold text-gray-800 mb-5">Link & Sosial Media</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField label="Bitly WA Link (opsional)" value={form.bitlyWaLink || ""} onChange={(v) => update("bitlyWaLink", v)} placeholder="https://bit.ly/xxx" />
-          <InputField label="Instagram URL" value={form.instagramUrl || ""} onChange={(v) => update("instagramUrl", v)} placeholder="https://instagram.com/xxx" />
-          <InputField label="Facebook URL" value={form.facebookUrl || ""} onChange={(v) => update("facebookUrl", v)} placeholder="https://facebook.com/xxx" />
-          <InputField label="TikTok URL" value={form.tiktokUrl || ""} onChange={(v) => update("tiktokUrl", v)} placeholder="https://tiktok.com/@xxx" />
-          <InputField label="YouTube URL" value={form.youtubeUrl || ""} onChange={(v) => update("youtubeUrl", v)} placeholder="https://youtube.com/@xxx" />
+          <InputField label="Bitly WA Link (opsional)" value={settings.bitlyWaLink || ""} onChange={(v) => update("bitlyWaLink", v)} placeholder="https://bit.ly/xxx" />
+          <InputField label="Instagram URL" value={settings.instagramUrl || ""} onChange={(v) => update("instagramUrl", v)} placeholder="https://instagram.com/xxx" />
+          <InputField label="Facebook URL" value={settings.facebookUrl || ""} onChange={(v) => update("facebookUrl", v)} placeholder="https://facebook.com/xxx" />
+          <InputField label="TikTok URL" value={settings.tiktokUrl || ""} onChange={(v) => update("tiktokUrl", v)} placeholder="https://tiktok.com/@xxx" />
+          <InputField label="YouTube URL" value={settings.youtubeUrl || ""} onChange={(v) => update("youtubeUrl", v)} placeholder="https://youtube.com/@xxx" />
         </div>
       </div>
 
       <button
-        onClick={() => onSave(form)}
+        onClick={onSave}
         disabled={saving}
-        className="btn-primary flex items-center gap-2 px-8 py-3.5 rounded-xl text-white font-bold disabled:opacity-60"
+        className="bg-green-700 hover:bg-green-600 text-white font-bold flex items-center gap-2 px-8 py-3.5 rounded-xl disabled:opacity-60 transition-all shadow-md"
       >
         <Save size={16} />
         {saving ? "Menyimpan..." : "Simpan Pengaturan"}
@@ -179,19 +174,16 @@ function SettingsTab({
 // --- Products Tab ---
 function ProductsTab({
   products,
+  onChange,
   onSave,
   saving,
 }: {
   products: Product[];
-  onSave: (p: Product[]) => void;
+  onChange: (p: Product[]) => void;
+  onSave: () => void;
   saving: boolean;
 }) {
-  const [items, setItems] = useState<Product[]>(products);
   const [expanded, setExpanded] = useState<string | null>(null);
-
-  useEffect(() => {
-    setItems(products);
-  }, [products]);
 
   const add = () => {
     const newItem: Product = {
@@ -203,33 +195,35 @@ function ProductsTab({
       kategori: "",
       berat: "",
     };
-    setItems((p) => [...p, newItem]);
+    onChange([...products, newItem]);
     setExpanded(newItem.id);
   };
 
-  const update = (id: string, key: keyof Product, val: string | number) =>
-    setItems((p) => p.map((item) => (item.id === id ? { ...item, [key]: val } : item)));
+  const update = (id: string, key: keyof Product, val: string | number) => {
+    onChange(products.map((item) => (item.id === id ? { ...item, [key]: val } : item)));
+  };
 
-  const remove = (id: string) =>
-    setItems((p) => p.filter((item) => item.id !== id));
+  const remove = (id: string) => {
+    onChange(products.filter((item) => item.id !== id));
+  };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-bold text-gray-800">
-          Manajemen Produk ({items.length} produk)
+          Manajemen Produk ({products.length} produk)
         </h3>
         <button
           onClick={add}
-          className="btn-primary flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-semibold"
+          className="bg-green-700 hover:bg-green-600 text-white text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-xl transition-all shadow-sm"
         >
           <Plus size={14} />
           Tambah Produk
         </button>
       </div>
 
-      {items.map((product) => (
-        <div key={product.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      {products.map((product, i) => (
+        <div key={product.id || i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div
             className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
             onClick={() => setExpanded(expanded === product.id ? null : product.id)}
@@ -241,11 +235,21 @@ function ProductsTab({
               <div>
                 <p className="font-semibold text-gray-800 text-sm">{product.nama}</p>
                 <p className="text-green-600 text-xs font-medium">
-                  Rp {Number(product.harga).toLocaleString("id-ID")}
+                  Rp {Number(product.harga || 0).toLocaleString("id-ID")}
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpanded(expanded === product.id ? null : product.id);
+                }}
+                className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-green-50 text-green-700 hover:bg-green-100 rounded-lg transition-colors border border-green-100"
+              >
+                <Pencil size={12} />
+                Edit
+              </button>
               <button
                 onClick={(e) => { e.stopPropagation(); remove(product.id); }}
                 className="w-7 h-7 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -257,7 +261,7 @@ function ProductsTab({
           </div>
 
           {expanded === product.id && (
-            <div className="border-t border-gray-100 p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="border-t border-gray-100 p-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50/30">
               <InputField label="Nama Produk" value={product.nama} onChange={(v) => update(product.id, "nama", v)} />
               <InputField label="Harga (Rp)" value={String(product.harga)} type="number" onChange={(v) => update(product.id, "harga", v)} />
               <InputField label="Deskripsi" value={product.deksripsi} onChange={(v) => update(product.id, "deksripsi", v)} rows={2} />
@@ -270,9 +274,9 @@ function ProductsTab({
       ))}
 
       <button
-        onClick={() => onSave(items)}
+        onClick={onSave}
         disabled={saving}
-        className="btn-primary flex items-center gap-2 px-8 py-3.5 rounded-xl text-white font-bold disabled:opacity-60"
+        className="bg-green-700 hover:bg-green-600 text-white font-bold flex items-center gap-2 px-8 py-3.5 rounded-xl disabled:opacity-60 transition-all shadow-md"
       >
         <Save size={16} />
         {saving ? "Menyimpan..." : "Simpan Semua Produk"}
@@ -284,19 +288,16 @@ function ProductsTab({
 // --- Contents Tab ---
 function ContentsTab({
   contents,
+  onChange,
   onSave,
   saving,
 }: {
   contents: ContentItem[];
-  onSave: (c: ContentItem[]) => void;
+  onChange: (c: ContentItem[]) => void;
+  onSave: () => void;
   saving: boolean;
 }) {
-  const [items, setItems] = useState<ContentItem[]>(contents);
   const [expanded, setExpanded] = useState<string | null>(null);
-
-  useEffect(() => {
-    setItems(contents);
-  }, [contents]);
 
   const add = () => {
     const newItem: ContentItem = {
@@ -306,33 +307,35 @@ function ContentsTab({
       link: "",
       deskripsi: "",
     };
-    setItems((p) => [...p, newItem]);
+    onChange([...contents, newItem]);
     setExpanded(newItem.id);
   };
 
-  const update = (id: string, key: keyof ContentItem, val: string) =>
-    setItems((p) => p.map((item) => (item.id === id ? { ...item, [key]: val } : item)));
+  const update = (id: string, key: keyof ContentItem, val: string) => {
+    onChange(contents.map((item) => (item.id === id ? { ...item, [key]: val } : item)));
+  };
 
-  const remove = (id: string) =>
-    setItems((p) => p.filter((item) => item.id !== id));
+  const remove = (id: string) => {
+    onChange(contents.filter((item) => item.id !== id));
+  };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="font-bold text-gray-800">
-          Manajemen Konten ({items.length} item)
+          Manajemen Konten ({contents.length} item)
         </h3>
         <button
           onClick={add}
-          className="btn-primary flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-semibold"
+          className="bg-green-700 hover:bg-green-600 text-white text-sm font-semibold flex items-center gap-2 px-4 py-2 rounded-xl transition-all shadow-sm"
         >
           <Plus size={14} />
           Tambah Konten
         </button>
       </div>
 
-      {items.map((item) => (
-        <div key={item.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      {contents.map((item, i) => (
+        <div key={item.id || i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div
             className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
             onClick={() => setExpanded(expanded === item.id ? null : item.id)}
@@ -348,7 +351,17 @@ function ContentsTab({
                 <p className="text-gray-400 text-xs">{item.tipe === "video" ? "Video" : "Foto"}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setExpanded(expanded === item.id ? null : item.id);
+                }}
+                className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-green-50 text-green-700 hover:bg-green-100 rounded-lg transition-colors border border-green-100"
+              >
+                <Pencil size={12} />
+                Edit
+              </button>
               <button
                 onClick={(e) => { e.stopPropagation(); remove(item.id); }}
                 className="w-7 h-7 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -360,7 +373,7 @@ function ContentsTab({
           </div>
 
           {expanded === item.id && (
-            <div className="border-t border-gray-100 p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="border-t border-gray-100 p-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50/30">
               <InputField label="Judul" value={item.judul} onChange={(v) => update(item.id, "judul", v)} />
               <div>
                 <label className="text-xs font-bold text-gray-600 block mb-1.5 uppercase tracking-wide">Tipe</label>
@@ -386,9 +399,9 @@ function ContentsTab({
       ))}
 
       <button
-        onClick={() => onSave(items)}
+        onClick={onSave}
         disabled={saving}
-        className="btn-primary flex items-center gap-2 px-8 py-3.5 rounded-xl text-white font-bold disabled:opacity-60"
+        className="bg-green-700 hover:bg-green-600 text-white font-bold flex items-center gap-2 px-8 py-3.5 rounded-xl disabled:opacity-60 transition-all shadow-md"
       >
         <Save size={16} />
         {saving ? "Menyimpan..." : "Simpan Semua Konten"}
@@ -415,11 +428,16 @@ export default function AdminPage() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const res = await fetch("/api/admin/data");
-    const data = await res.json();
-    setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
-    setProducts(data.products || []);
-    setContents(data.contents || []);
+    try {
+      const res = await fetch("/api/admin/data");
+      const data = await res.json();
+      setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
+      setProducts(data.products || []);
+      setContents(data.contents || []);
+    } catch (e) {
+      console.error("Gagal memuat data:", e);
+      showToast("❌ Gagal mengambil data terbaru.");
+    }
     setLoading(false);
   }, []);
 
@@ -427,15 +445,46 @@ export default function AdminPage() {
     fetchData();
   }, [fetchData]);
 
-  const save = async (payload: object) => {
+  const handleSave = async (customPayload?: {
+    settings?: SiteSettings;
+    products?: Product[];
+    contents?: ContentItem[];
+    overrideProducts?: boolean;
+    overrideContents?: boolean;
+  }) => {
     setSaving(true);
-    await fetch("/api/admin/data", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    
+    // Construct consolidated payload combining the updated data and current sibling state in parent
+    const payload = {
+      settings: customPayload?.settings || settings,
+      products: customPayload?.products || products,
+      contents: customPayload?.contents || contents,
+      overrideProducts: customPayload?.overrideProducts !== undefined ? customPayload.overrideProducts : true,
+      overrideContents: customPayload?.overrideContents !== undefined ? customPayload.overrideContents : true,
+    };
+
+    try {
+      const res = await fetch("/api/admin/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        showToast("✅ Perubahan berhasil disimpan secara permanen!");
+        
+        // Sync local states
+        if (customPayload?.settings) setSettings(customPayload.settings);
+        if (customPayload?.products) setProducts(customPayload.products);
+        if (customPayload?.contents) setContents(customPayload.contents);
+      } else {
+        showToast("❌ Gagal menyimpan perubahan.");
+      }
+    } catch (e) {
+      console.error(e);
+      showToast("❌ Terjadi kesalahan koneksi.");
+    }
     setSaving(false);
-    showToast("✅ Data berhasil disimpan!");
   };
 
   const handleLogout = async () => {
@@ -448,11 +497,11 @@ export default function AdminPage() {
       {/* Sidebar */}
       <div className="w-64 bg-green-900 flex-shrink-0 flex flex-col fixed h-full left-0 top-0 z-10 shadow-xl">
         {/* Logo */}
-        <div className="p-5 border-b border-green-800">
-          <div className="relative w-full h-12 bg-white/10 rounded-xl overflow-hidden mb-2">
-            <Image src="/logo.png" alt="Brem Mekar Sari 1" fill className="object-contain p-1.5" />
+        <div className="p-5 border-b border-green-800 flex flex-col items-center">
+          <div className="relative w-16 h-16 bg-white/5 border border-green-700/30 rounded-full overflow-hidden mb-2 flex items-center justify-center">
+            <Image src="/logo.png" alt="Brem Mekar Sari 1" fill className="object-contain p-0.5" />
           </div>
-          <p className="text-green-400 text-xs text-center font-medium">Admin Panel</p>
+          <p className="text-green-400 text-xs text-center font-semibold">Admin Panel</p>
         </div>
 
         {/* Nav */}
@@ -516,21 +565,24 @@ export default function AdminPage() {
             {activeTab === "settings" && (
               <SettingsTab
                 settings={settings}
-                onSave={(s) => save({ settings: s, products, contents })}
+                onChange={setSettings}
+                onSave={() => handleSave({ settings })}
                 saving={saving}
               />
             )}
             {activeTab === "products" && (
               <ProductsTab
                 products={products}
-                onSave={(p) => save({ settings, products: p, contents, overrideProducts: true })}
+                onChange={setProducts}
+                onSave={() => handleSave({ products, overrideProducts: true })}
                 saving={saving}
               />
             )}
             {activeTab === "contents" && (
               <ContentsTab
                 contents={contents}
-                onSave={(c) => save({ settings, products, contents: c, overrideContents: true })}
+                onChange={setContents}
+                onSave={() => handleSave({ contents, overrideContents: true })}
                 saving={saving}
               />
             )}

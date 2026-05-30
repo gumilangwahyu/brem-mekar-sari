@@ -125,8 +125,8 @@ export function Footer({ settings }: FooterProps) {
 
           {/* Brand */}
           <div>
-            <div className="relative w-44 h-12 mb-4 bg-white rounded-xl overflow-hidden shadow">
-              <img src="/logo.png" alt="Brem Mekar Sari 1" className="w-full h-full object-contain p-1.5" />
+            <div className="relative w-16 h-16 mb-4 overflow-hidden rounded-full bg-transparent flex items-center justify-center">
+              <img src="/logo.png" alt="Brem Mekar Sari 1" className="w-full h-full object-contain" />
             </div>
             <p className="text-green-300 text-sm leading-relaxed mb-5">
               Produsen brem tradisional premium khas Wonogiri, Jawa Tengah.

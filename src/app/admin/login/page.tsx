@@ -37,13 +37,13 @@ export default function AdminLoginPage() {
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
           {/* Header band */}
           <div className="bg-green-700 px-8 py-6 flex flex-col items-center">
-            {/* Logo landscape */}
-            <div className="relative w-full h-16 bg-white rounded-2xl overflow-hidden shadow-md mb-3">
+            {/* Logo circular */}
+            <div className="relative w-16 h-16 bg-white/10 border border-green-500/20 rounded-full overflow-hidden mb-3 flex items-center justify-center">
               <Image
                 src="/logo.png"
                 alt="Brem Mekar Sari 1"
                 fill
-                className="object-contain p-2"
+                className="object-contain p-0.5"
                 priority
               />
             </div>

@@ -26,18 +26,19 @@ export default function Navbar() {
   const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent("Halo Mekar Sari 1, saya ingin memesan brem premium!")}`;
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-green-950/95 backdrop-blur-md shadow-xl py-2" : "bg-transparent py-4"}`}>
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "bg-green-950/95 backdrop-blur-md shadow-xl py-2" : "bg-transparent py-4"}`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
-
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="relative w-44 h-12 overflow-hidden rounded-lg bg-white shadow-md group-hover:shadow-green-400/30 transition-all duration-300">
+            <div className="relative w-12 h-12 overflow-hidden rounded-full bg-transparent group-hover:scale-105 transition-all duration-300">
               <Image
                 src="/logo.png"
                 alt="Brem Mekar Sari 1"
                 fill
-                className="object-contain p-1"
+                className="object-contain"
                 priority
               />
             </div>

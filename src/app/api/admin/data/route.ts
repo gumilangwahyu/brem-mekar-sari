@@ -5,14 +5,14 @@ import { fetchProducts, fetchContents } from "@/lib/sheets";
 export async function GET() {
   const data = readSiteData();
   
-  // If products are empty in local db, or override is disabled, pre-populate with Google Sheets data
-  if (!data.overrideProducts || !data.products || data.products.length === 0) {
+  // If override is disabled, pre-populate with Google Sheets data
+  if (!data.overrideProducts) {
     const sheetsProducts = await fetchProducts();
     data.products = sheetsProducts;
   }
   
-  // If contents are empty in local db, or override is disabled, pre-populate with Google Sheets data
-  if (!data.overrideContents || !data.contents || data.contents.length === 0) {
+  // If override is disabled, pre-populate with Google Sheets data
+  if (!data.overrideContents) {
     const sheetsContents = await fetchContents();
     data.contents = sheetsContents;
   }
