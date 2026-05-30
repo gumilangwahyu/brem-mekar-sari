@@ -17,12 +17,13 @@ export default function FloatingWAButton({
       href={waUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="wa-float group flex items-center gap-0 hover:gap-3 overflow-hidden bg-green-500 hover:bg-green-600 text-white rounded-full shadow-2xl transition-all duration-300 h-14 w-14 hover:w-auto hover:px-5"
-      aria-label="Chat WhatsApp"
       id="floating-wa-btn"
+      aria-label="Chat WhatsApp"
+      className="fixed bottom-6 right-6 z-50 flex items-center gap-0 hover:gap-2.5 bg-green-500 hover:bg-green-400 text-white rounded-full shadow-2xl shadow-green-900/40 hover:shadow-green-500/40 transition-all duration-300 overflow-hidden"
+      style={{ height: "3.5rem", minWidth: "3.5rem", paddingLeft: "1rem", paddingRight: "1rem" }}
     >
-      <MessageCircle size={24} className="flex-shrink-0 mx-auto group-hover:mx-0" />
-      <span className="whitespace-nowrap text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 max-w-0 group-hover:max-w-xs overflow-hidden">
+      <MessageCircle size={22} className="shrink-0" />
+      <span className="whitespace-nowrap text-sm font-bold max-w-0 overflow-hidden hover:max-w-none transition-all duration-300 opacity-0 hover:opacity-100 group-hover:opacity-100">
         Chat WhatsApp
       </span>
     </a>

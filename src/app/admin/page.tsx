@@ -448,16 +448,11 @@ export default function AdminPage() {
       {/* Sidebar */}
       <div className="w-64 bg-green-900 flex-shrink-0 flex flex-col fixed h-full left-0 top-0 z-10 shadow-xl">
         {/* Logo */}
-        <div className="p-6 border-b border-green-800">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white overflow-hidden">
-              <Image src="/logo.png" alt="Logo" width={40} height={40} className="w-full h-full object-cover" />
-            </div>
-            <div>
-              <p className="text-white font-black text-sm">Admin Panel</p>
-              <p className="text-green-400 text-xs">Mekar Sari 1</p>
-            </div>
+        <div className="p-5 border-b border-green-800">
+          <div className="relative w-full h-12 bg-white/10 rounded-xl overflow-hidden mb-2">
+            <Image src="/logo.png" alt="Brem Mekar Sari 1" fill className="object-contain p-1.5" />
           </div>
+          <p className="text-green-400 text-xs text-center font-medium">Admin Panel</p>
         </div>
 
         {/* Nav */}

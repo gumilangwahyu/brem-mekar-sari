@@ -1,5 +1,5 @@
 import { fetchProducts, fetchContents, DEFAULT_SETTINGS } from "@/lib/sheets";
-import { getSiteSettings } from "@/lib/db";
+import { getSiteSettings, readSiteData } from "@/lib/db";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import StatsSection from "@/components/StatsSection";
@@ -9,7 +9,7 @@ import GallerySection from "@/components/GallerySection";
 import { CTASection, Footer } from "@/components/CTAFooter";
 import FloatingWAButton from "@/components/FloatingWAButton";
 
-export const revalidate = 300; // ISR - revalidate every 5 minutes
+export const revalidate = 0; // Disable server cache for real-time changes
 
 export default async function Home() {
   // Fetch data in parallel
@@ -19,12 +19,20 @@ export default async function Home() {
     Promise.resolve(getSiteSettings()),
   ]);
 
+  const localData = readSiteData();
+
   // Use settings with defaults
   const siteSettings = { ...DEFAULT_SETTINGS, ...settings };
 
-  // Products: use sheets data (admin can override via API)
-  const products = sheetsProducts.length > 0 ? sheetsProducts : [];
-  const contents = sheetsContents.length > 0 ? sheetsContents : [];
+  // Products: use local overrides if enabled, otherwise use Google Sheets
+  const products = localData.overrideProducts && localData.products && localData.products.length > 0
+    ? localData.products
+    : (sheetsProducts.length > 0 ? sheetsProducts : []);
+
+  // Contents: use local overrides if enabled, otherwise use Google Sheets
+  const contents = localData.overrideContents && localData.contents && localData.contents.length > 0
+    ? localData.contents
+    : (sheetsContents.length > 0 ? sheetsContents : []);
 
   return (
     <main className="min-h-screen">
