@@ -18,6 +18,8 @@ import {
   Eye,
   Pencil,
   HelpCircle,
+  Menu,
+  X,
 } from "lucide-react";
 
 type Tab = "settings" | "products" | "contents" | "faqs";
@@ -837,6 +839,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
 
   const showToast = (msg: string) => {
@@ -962,11 +965,59 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+      {/* Mobile Header / Top Bar */}
+      <header className="fixed top-0 left-0 right-0 h-16 bg-green-900 text-white flex items-center justify-between px-4 z-20 shadow-md md:hidden">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 hover:bg-green-800 rounded-lg transition-colors cursor-pointer"
+            aria-label="Open sidebar"
+          >
+            <Menu size={24} />
+          </button>
+          <span className="font-bold text-sm tracking-wide">
+            {activeTab === "settings" && "Pengaturan Website"}
+            {activeTab === "products" && "Manajemen Produk"}
+            {activeTab === "contents" && "Manajemen Konten"}
+            {activeTab === "faqs" && "Manajemen FAQ"}
+          </span>
+        </div>
+        <div className="relative w-9 h-9 bg-white border border-green-700/30 rounded-full overflow-hidden flex items-center justify-center">
+          <Image
+            src="/logo.png"
+            alt="Brem Mekar Sari 1"
+            fill
+            className="object-contain p-0.5"
+          />
+        </div>
+      </header>
+
+      {/* Backdrop overlay for Mobile Sidebar */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-20 md:hidden transition-opacity duration-300 ease-in-out"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className="w-64 bg-green-900 flex-shrink-0 flex flex-col fixed h-full left-0 top-0 z-10 shadow-xl">
-        {/* Logo */}
-        <div className="p-5 border-b border-green-800 flex flex-col items-center">
+      <div
+        className={`w-64 bg-green-900 flex-shrink-0 flex flex-col fixed h-full left-0 top-0 z-30 shadow-xl transition-transform duration-300 ease-in-out md:translate-x-0 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Logo and close button */}
+        <div className="p-5 border-b border-green-800 flex flex-col items-center relative">
+          {/* Close button for Mobile Sidebar */}
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="absolute top-4 right-4 text-green-200 hover:text-white p-1.5 rounded-xl hover:bg-green-800/50 md:hidden transition-colors cursor-pointer"
+            aria-label="Close sidebar"
+          >
+            <X size={20} />
+          </button>
+
           <div className="relative w-16 h-16 bg-white/5 border border-green-700/30 rounded-full overflow-hidden mb-2 flex items-center justify-center">
             <Image
               src="/logo.png"
@@ -981,32 +1032,44 @@ export default function AdminPage() {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           <TabButton
             tab="settings"
             active={activeTab === "settings"}
-            onClick={() => setActiveTab("settings")}
+            onClick={() => {
+              setActiveTab("settings");
+              setIsSidebarOpen(false);
+            }}
             icon={Settings}
             label="Pengaturan"
           />
           <TabButton
             tab="products"
             active={activeTab === "products"}
-            onClick={() => setActiveTab("products")}
+            onClick={() => {
+              setActiveTab("products");
+              setIsSidebarOpen(false);
+            }}
             icon={Package}
             label="Produk"
           />
           <TabButton
             tab="contents"
             active={activeTab === "contents"}
-            onClick={() => setActiveTab("contents")}
+            onClick={() => {
+              setActiveTab("contents");
+              setIsSidebarOpen(false);
+            }}
             icon={ImageIcon}
             label="Konten"
           />
           <TabButton
             tab="faqs"
             active={activeTab === "faqs"}
-            onClick={() => setActiveTab("faqs")}
+            onClick={() => {
+              setActiveTab("faqs");
+              setIsSidebarOpen(false);
+            }}
             icon={HelpCircle}
             label="FAQ"
           />
@@ -1024,15 +1087,18 @@ export default function AdminPage() {
             Lihat Website
           </a>
           <button
-            onClick={fetchData}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-green-200 hover:bg-green-800/50 text-sm font-medium transition-colors w-full"
+            onClick={() => {
+              fetchData();
+              setIsSidebarOpen(false);
+            }}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-green-200 hover:bg-green-800/50 text-sm font-medium transition-colors w-full cursor-pointer"
           >
             <RefreshCw size={16} />
             Refresh Data
           </button>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-red-300 hover:bg-red-900/30 text-sm font-medium transition-colors w-full"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-red-300 hover:bg-red-900/30 text-sm font-medium transition-colors w-full cursor-pointer"
           >
             <LogOut size={16} />
             Keluar
@@ -1041,7 +1107,7 @@ export default function AdminPage() {
       </div>
 
       {/* Main content */}
-      <div className="ml-64 flex-1 p-8">
+      <div className="ml-0 md:ml-64 flex-1 p-4 md:p-8 pt-20 md:pt-8 transition-all">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-2xl font-black text-gray-900">
